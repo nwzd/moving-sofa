@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Optimal Moving Sofa as r = f(α), t = g(α)</title>
+<meta name="description" content="Gerver's optimal moving sofa written exactly in the rotating-hallway parametrization r = f(α), t = g(α): closed forms, an animation, and numerical checks.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<script defer src="sofa.js"></script>
+</head>
+<body>
+<main>
+
+<header>
+  <h1>The Optimal Moving Sofa as r = f(α), t = g(α)</h1>
+  <p class="byline">nwzd · 16 October 2026 · <a href="https://github.com/nwzd/moving-sofa">code on GitHub</a></p>
+  <p class="lead">The optimal moving sofa (Gerver's, area 2.21953166887…) is exactly what the rotating-hallway model from the Math.SE question <a href="https://math.stackexchange.com/questions/1787466/modelling-the-moving-sofa">“Modelling the moving sofa”</a> produces when r and t are made functions of α. This page gives those functions in closed form, animates the motion, and checks the result. It is not a new record: it is the known optimum, written in that model's coordinates.</p>
+</header>
+
+<section id="model">
+  <h2>The model</h2>
+  <p>The sofa stays still and the L-shaped hallway of width 1 turns around it. When the hallway has turned through α/2, its inner corner sits at</p>
+  $$A(\alpha) = \bigl(r\cos\alpha,\; t\sin\alpha\bigr), \qquad 0 \le \alpha \le \pi.$$
+  <p>The outer corner is A + √2·(cos(π/4 + α/2), sin(π/4 + α/2)). The sofa is whatever stays inside every position of the hallway, within the strip 0 ≤ y ≤ 1.</p>
+  <p>With r and t constant, the corner runs along an ellipse:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Corner path</th><th>r</th><th>t</th><th>Sofa area</th></tr></thead>
+    <tbody>
+      <tr><td>Circle (Hammersley's sofa)</td><td>2/π = 0.636620</td><td>2/π = 0.636620</td><td>2/π + π/2 = 2.207416</td></tr>
+      <tr><td>Best ellipse (found in the thread)</td><td>0.605514</td><td>0.667834</td><td>2.217857</td></tr>
+      <tr><td>Optimal: r = f(α), t = g(α), this page</td><td>0.594–0.614</td><td>0.664–0.710</td><td>2.219532 (Gerver's sofa)</td></tr>
+    </tbody>
+  </table></div>
+  <p>The question suggested letting r and t depend on α. Any path of the inner corner can be written as (f(α)·cos α, g(α)·sin α), so the best choice of f and g gives the optimal sofa.</p>
+</section>
+
+<section id="animation">
+  <h2>The turn, animated</h2>
+  <figure class="wide">
+    <p class="fig-title">The hallway turns 90° and carves the slab down to Gerver's sofa</p>
+    <p class="fig-sub">Grey: the hallway; its inner corner rides on A(α) and traces the dark line. Blue: what still fits inside every hallway position so far. Pale blue: the final sofa.</p>
+    <canvas id="turn" class="scene" role="img" aria-label="Animation: the hallway turns and carves a slab down to Gerver's sofa"></canvas>
+    <p class="readout" id="turn-readout" aria-live="off"></p>
+    <svg id="turn-chart" class="chart" viewBox="0 0 720 170" role="img" aria-label="r = f(alpha) and t = g(alpha) with a cursor at the current angle"></svg>
+    <div class="controls">
+      <button id="turn-play" type="button">Pause</button>
+      <input id="turn-slider" type="range" min="0" max="180" step="0.5" value="0" aria-label="Hallway angle α in degrees">
+    </div>
+    <figcaption>Computed in your browser from the closed forms below. The turn takes 9 seconds, holds for 1.5 seconds, then repeats. Dragging the slider pauses it.</figcaption>
+  </figure>
+</section>
+
+<section id="answer">
+  <h2>The answer: f(α) and g(α)</h2>
+  <p>Both functions are mirror-symmetric about α = π/2, so they only need to be given on [0, π/2]. There they come in three pieces, split at α = 2φ ≈ 4.49° and α = 2θ ≈ 78.07°.</p>
+  $$f(\pi-\alpha) = f(\alpha), \qquad g(\pi-\alpha) = g(\alpha)$$
+  <div class="table-wrap"><table>
+    <thead><tr><th>Constant</th><th>Value</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td>φ</td><td>0.0391773647900836</td><td>Hallway angle at which the inner corner first touches the sofa</td></tr>
+      <tr><td>θ</td><td>0.6813015093827249</td><td>Hallway angle at which the inner wall stops touching the sofa</td></tr>
+      <tr><td>a</td><td>1.2103224220726888</td><td>Piece 1</td></tr>
+      <tr><td>K₁</td><td>0.4034408073575629</td><td>Piece 1</td></tr>
+      <tr><td>b₁</td><td>−0.5276245980267846</td><td>Piece 2</td></tr>
+      <tr><td>b₂</td><td>0.9202583851606376</td><td>Piece 2</td></tr>
+      <tr><td>K₂</td><td>−0.3054160633413417</td><td>Piece 2</td></tr>
+      <tr><td>L₂</td><td>0.4724066197508055</td><td>Piece 2</td></tr>
+      <tr><td>c</td><td>0.6260455228484659</td><td>Piece 3</td></tr>
+      <tr><td>L₃</td><td>0.8896264790032219</td><td>Piece 3</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Piece 1, 0 ≤ α ≤ 2φ.</strong> The sofa touches both outer walls and one inner wall; the inner corner is not yet touching it.</p>
+  $$f(\alpha) = a + \frac{K_1 - \cos\frac{\alpha}{2} + \frac{1}{2}\sin\frac{\alpha}{2} - \frac{1}{4}\sin\alpha}{\cos\alpha}, \qquad g(\alpha) = a - \frac{1}{2\cos\frac{\alpha}{2}} - \frac{1}{4}\tan\frac{\alpha}{4}$$
+
+  <p><strong>Piece 2, 2φ ≤ α ≤ 2θ.</strong> The inner corner now touches too. Write s = α/2.</p>
+  $$P = b_2 + b_1 s - \tfrac{1}{4}s^2, \qquad Q = 1 + b_1 - \tfrac{1}{2}s$$
+  $$f(\alpha) = \frac{P\cos s + Q\sin s + K_2}{\cos\alpha}, \qquad g(\alpha) = \frac{P\sin s - Q\cos s + L_2}{\sin\alpha}$$
+
+  <p><strong>Piece 3, 2θ ≤ α ≤ π/2.</strong> Only the inner corner and the two outer walls touch the sofa.</p>
+  $$f(\alpha) = \frac{1}{\sqrt{2}}\left[\frac{c - \pi/4}{\sin(\pi/4 + \alpha/2)} + \frac{\pi/4 - \alpha/2}{\sin(\pi/4 - \alpha/2)}\right]$$
+  $$g(\alpha) = \frac{\sqrt{2}\,(c - \pi/4)\sin(\pi/4 + \alpha/2) - \sqrt{2}\,(\pi/4 - \alpha/2)\sin(\pi/4 - \alpha/2) + L_3}{\sin\alpha}$$
+
+  <p>The divisions by zero at the ends have finite limits:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>α</th><th>f(α)</th><th>g(α)</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>0.6137632294</td><td>a − 1/2 = 0.7103224221</td></tr>
+      <tr><td>π/2</td><td>(c − π/4 + 1)/√2 = 0.5944274485</td><td>√2(c − π/4) + L₃ = 0.6642678135</td></tr>
+    </tbody>
+  </table></div>
+  <p>f and g have continuous first derivatives; their curvature jumps at the four break points. φ and θ have no closed form: they are roots of two transcendental equations from Gerver's 1992 paper.</p>
+</section>
+
+<section id="vary">
+  <h2>How f and g vary</h2>
+  <figure>
+    <p class="fig-title">Optimal r dips 3.2% and t 6.5% toward mid-turn, around the best ellipse</p>
+    <p class="fig-sub">Dashed: the best constant ellipse. Dotted: where the walls touching the sofa change (α = 4.49°, 78.07°, 101.93°, 175.51°).</p>
+    <svg id="fg-chart" class="chart" viewBox="0 0 720 360" role="img" aria-label="f(alpha) and g(alpha) from 0 to 180 degrees, with the best ellipse's r and t"></svg>
+    <figcaption>Computed from the closed forms above.</figcaption>
+  </figure>
+  <p>Neither function is constant, so no ellipse is optimal. Letting r and t follow f and g adds 0.0017 to the best ellipse's area.</p>
+</section>
+
+<section id="shape">
+  <h2>The shape</h2>
+  <figure>
+    <p class="fig-title">The optimal sofa, with the inner corner's path and the hallway at α = 90°</p>
+    <p class="fig-sub">Dashed: the inner corner A(α), dots every 30°. Grey: the hallway walls at α = 90°, touching the sofa at both shoulders and at the top of the arch.</p>
+    <canvas id="shape-canvas" class="scene" role="img" aria-label="Gerver's sofa with the inner corner's path and the hallway at 90 degrees"></canvas>
+    <figcaption>Computed from the closed forms above.</figcaption>
+  </figure>
+  <p>From α = 4.49° to 175.51° the corner's path is the sofa's arch. The arch's two feet, where it meets the floor near x = ±0.61 to ±0.81, are shaped by the inner walls instead.</p>
+</section>
+
+<section id="derivation">
+  <h2>Where the formulas come from</h2>
+  <p>The formulas are Romik's exact description of Gerver's sofa (2018), moved into the question's coordinates. Romik uses the same construction as the question: the sofa is fixed, and the hallway's inner corner follows a “rotation path” x(τ) while the hallway turns through τ ∈ [0, π/2].</p>
+  <ol>
+    <li>Gerver's motion has five phases, set by which walls touch the sofa (table below). In each phase, maximal area forces the path to satisfy a linear ODE, which Romik solves in closed form.</li>
+    <li>Joining the five solutions smoothly, with left–right symmetry and the two contact conditions at the phase changes, gives 22 equations in 22 constants. Solving them to 40 digits reproduces Romik's table.</li>
+    <li>In the question the hallway turns by α/2, so α = 2τ. Shifting x by κ₃,₁ (Romik's path starts at the origin) puts the path symmetric about x = 0. Then f = X/cos α and g = Y/sin α, where (X, Y) is the corner.</li>
+    <li>In Romik's notation the constants are a = a₁, b₁, b₂, c = c₁, K₁ = 1 − a₁ − κ₃,₁, K₂ = κ₂,₁ − κ₃,₁, L₂ = κ₂,₂ and L₃ = κ₃,₂.</li>
+  </ol>
+  <div class="table-wrap"><table>
+    <thead><tr><th>α (degrees)</th><th>What touches the sofa</th><th>Formula</th></tr></thead>
+    <tbody>
+      <tr><td>0 – 4.49</td><td>Both outer walls, one inner wall</td><td>Piece 1</td></tr>
+      <tr><td>4.49 – 78.07</td><td>Inner corner, both outer walls, one inner wall</td><td>Piece 2</td></tr>
+      <tr><td>78.07 – 101.93</td><td>Inner corner, both outer walls</td><td>Piece 3</td></tr>
+      <tr><td>101.93 – 175.51</td><td>Inner corner, both outer walls, the other inner wall</td><td>Piece 2, mirrored</td></tr>
+      <tr><td>175.51 – 180</td><td>Both outer walls, the other inner wall</td><td>Piece 1, mirrored</td></tr>
+    </tbody>
+  </table></div>
+  <p>The answer is unique. Both outer walls touch Gerver's sofa at every angle, and two perpendicular walls pressed against a shape fix the hallway's position. So no other f and g give this sofa.</p>
+</section>
+
+<section id="checks">
+  <h2>Checks</h2>
+  <p>Computed directly from f and g with the question's construction, the sofa's area is 2.2195316686. Gerver's constant is 2.2195316689, a difference of 3 × 10⁻¹⁰.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Check</th><th>Result</th><th>Reference value</th></tr></thead>
+    <tbody>
+      <tr><td>Closed forms vs. the 40-digit solver, at 2,001 angles</td><td>Largest difference 8 × 10⁻¹⁶</td><td>0</td></tr>
+      <tr><td>φ and θ substituted into Gerver's original equations</td><td>Residuals below 2 × 10⁻²⁶</td><td>0</td></tr>
+      <tr><td>Area from f and g</td><td>2.2195316686</td><td>2.2195316689 (Gerver)</td></tr>
+      <tr><td>Same area method, circle r = t = 2/π</td><td>2.20741616</td><td>2.20741610 (exact)</td></tr>
+      <tr><td>Same area method, best ellipse</td><td>2.217856994</td><td>2.217856998 (thread)</td></tr>
+    </tbody>
+  </table></div>
+  <p>The area method slices the sofa vertically. For each slice it finds the lowest outer wall and the highest inner wall over all hallway angles, refining the angle by golden-section search. It then integrates the slice heights by Gauss–Legendre quadrature over 2,000 subintervals. The scripts are in the <a href="https://github.com/nwzd/moving-sofa/tree/main/code">code folder</a>.</p>
+  <p><strong>2.2195326 is not a new record.</strong> An earlier quick check sampled the hallway at 16,000 fixed angles and extrapolated to 2.2195326. Fixed sampling misses the hallway positions between samples, leaving slivers that should have been cut away, so it always comes out high. The same quick method put the circle 8 × 10⁻⁵ above its exact value. Beyond the numerics, f and g describe Gerver's sofa itself, so their area is Gerver's constant by construction. Baek (2024) proved that no sofa has a larger area.</p>
+</section>
+
+<section id="conclusion">
+  <h2>Conclusion</h2>
+  <p>The question's idea works: letting r and t depend on α captures the optimal sofa exactly. The functions f and g are elementary closed forms in three pieces, fixed by ten constants.</p>
+  <ul>
+    <li><strong>The optimum is close to an ellipse.</strong> Over the turn, r varies by 3.2% and t by 6.5%. The best constant (r, t) comes within 0.0017 of the optimal area, a gap of 0.075%.</li>
+    <li><strong>Closing that gap needs the pieces.</strong> f and g switch formula exactly where the walls touching the sofa change, at 4.49°, 78.07° and their mirror images. They are only once differentiable there, so no analytic family such as the ellipses can match them.</li>
+    <li><strong>No new record.</strong> This is Gerver's sofa in new coordinates, and Baek (2024) proved it optimal. The area recomputed from f and g matches Gerver's constant to within 3 × 10⁻¹⁰.</li>
+    <li><strong>What stays open.</strong> The break angles φ and θ have no closed form; they are roots of Gerver's transcendental equations. Any other rotation path, such as Romik's ambidextrous sofa, can be rewritten in (r, t) form the same way.</li>
+  </ul>
+</section>
+
+<section id="sources">
+  <h2>Sources</h2>
+  <ul>
+    <li><a href="https://math.stackexchange.com/questions/1787466/modelling-the-moving-sofa">Modelling the “Moving Sofa”</a>, Mathematics Stack Exchange question 1787466: the rotating-hallway model and the ellipse results.</li>
+    <li>D. Romik, <a href="https://arxiv.org/abs/1606.08111">Differential equations and exact solutions in the moving sofa problem</a>, arXiv:1606.08111, Experimental Mathematics (2018): the rotation-path ODEs and the table of constants.</li>
+    <li>J. Baek, <a href="https://arxiv.org/abs/2411.19826">Optimality of Gerver's Sofa</a>, arXiv:2411.19826 (November 2024): the proof that Gerver's sofa has maximal area.</li>
+    <li>J. L. Gerver, On moving a sofa around a corner, Geometriae Dedicata 42 (1992), 267–283, as cited in <a href="https://arxiv.org/abs/1606.08111">Romik's paper</a>: the original construction and the equations for φ and θ.</li>
+  </ul>
+</section>
+
+<footer>
+  Code: <a href="https://github.com/nwzd/moving-sofa">github.com/nwzd/moving-sofa</a> (MIT). Text and figures: CC BY 4.0.
+</footer>
+
+</main>
+</body>
+</html>
