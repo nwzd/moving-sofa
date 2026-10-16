@@ -30,6 +30,18 @@ where P = b₂ + b₁s − s²/4 and Q = 1 + b₁ − s/2, and
 
 Full-precision constants, the derivation from [Romik's exact solution (2018)](https://arxiv.org/abs/1606.08111), and the checks are in the article.
 
+## A simpler form
+
+In the hallway's turning frame the same path is shorter, and it rests on just two numbers. With τ = α/2 (the hallway's angle) and R_τ the rotation by τ, the inner corner is A(α) = R_τ u(τ) + v:
+
+| Hallway angle τ | u(τ), the corner in the hallway's frame | Offset v |
+| --- | --- | --- |
+| 0 ≤ τ ≤ φ | (a cos τ − ¼ sin τ − 1, a sin τ + ¼ cos τ − ½) | (K₁, ¼) |
+| φ ≤ τ ≤ θ | (b₂ + b₁τ − ¼τ², ½τ − b₁ − 1) | (K₂, L₂) |
+| θ ≤ τ ≤ π/4 | (c − τ, c − π/2 + τ) | (0, L₃) |
+
+The eight constants a, K₁, b₁, b₂, K₂, L₂, c, L₃ are explicit functions of φ and θ (smoothness of the path at τ = φ and τ = θ), and φ, θ solve two equations (the corner first touches the sofa where the other inner wall starts touching it). The formulas are in the article; `code/simple_form.py` solves the two equations and reproduces all constants to 40 digits.
+
 ## Checks
 
 | Check | Result | Reference |
@@ -46,11 +58,13 @@ pip install -r code/requirements.txt
 cd code
 python gerver_path.py    # solve Romik's 22 equations for the constants (40 digits), print f and g
 python verify.py         # closed forms vs. solver; also a quick fixed-angle area estimate, which runs high
+python simple_form.py    # the two-number form: solve for phi and theta, rebuild every constant
 python area_precise.py   # sofa area from f and g, about 3 minutes
 ```
 
 - `code/gerver_path.py` solves for the 22 constants of Gerver's rotation path and maps it into (r, t) form.
 - `code/verify.py` holds the closed-form f and g and compares them with the solver.
+- `code/simple_form.py` computes all constants from φ and θ alone and finds φ, θ from the two contact equations.
 - `code/area_precise.py` computes the sofa area directly from f and g: for each vertical slice it optimizes over the hallway angle, then integrates by Gauss–Legendre quadrature.
 - `docs/` is the article (GitHub Pages). Its figures and animation are computed in the browser from the same closed forms (`docs/sofa.js`).
 

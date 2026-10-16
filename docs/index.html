@@ -18,7 +18,7 @@
 <header>
   <h1>The Optimal Moving Sofa as r = f(α), t = g(α)</h1>
   <p class="byline">nwzd · 16 October 2026 · <a href="https://github.com/nwzd/moving-sofa">code on GitHub</a></p>
-  <p class="lead">The optimal moving sofa (Gerver's, area 2.21953166887…) is exactly what the rotating-hallway model from the Math.SE question <a href="https://math.stackexchange.com/questions/1787466/modelling-the-moving-sofa">“Modelling the moving sofa”</a> produces when r and t are made functions of α. This page gives those functions in closed form, animates the motion, and checks the result. The shape is Gerver's sofa itself, not a new one; what is new is its description in that model's coordinates.</p>
+  <p class="lead">The optimal moving sofa (Gerver's, area 2.21953166887…) is exactly what the rotating-hallway model from the Math.SE question <a href="https://math.stackexchange.com/questions/1787466/modelling-the-moving-sofa">“Modelling the moving sofa”</a> produces when r and t are made functions of α. This page gives those functions in closed form, reduces them to a simpler form that needs only two numbers, animates the motion, and checks the result. The shape is Gerver's sofa itself, not a new one; what is new is its description in that model's coordinates.</p>
 </header>
 
 <section id="model">
@@ -96,6 +96,33 @@
   <p>f and g have continuous first derivatives; their second derivatives jump at the four break points. φ and θ have no closed form: they are roots of two transcendental equations from Gerver's 1992 paper.</p>
 </section>
 
+<section id="simpler">
+  <h2>A simpler form of the same answer</h2>
+  <p>f and g are the answer in the question's terms, but not the simplest way to write it. Dividing by cos α and sin α makes the formulas longer and creates the 0/0 at α = π/2. Following the corner in the hallway's own turning frame removes both, and the whole motion then rests on just two numbers, φ and θ.</p>
+  <p><strong>The corner in the hallway's frame.</strong> Let τ = α/2 be the hallway's angle and R<sub>τ</sub> the rotation by τ. Then</p>
+  $$A(\alpha) = R_{\tau}\,u(\tau) + v, \qquad \tau = \frac{\alpha}{2}, \qquad R_\tau = \begin{pmatrix}\cos\tau & -\sin\tau\\ \sin\tau & \cos\tau\end{pmatrix},$$
+  <p>with u and v from this table. The second half of the turn is the mirror image: if A(α) = (X, Y), then A(π − α) = (−X, Y).</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Hallway angle τ</th><th>u(τ): the corner in the hallway's frame</th><th>Offset v</th></tr></thead>
+    <tbody>
+      <tr><td>0 ≤ τ ≤ φ</td><td>(a cos τ − ¼ sin τ − 1, a sin τ + ¼ cos τ − ½)</td><td>(K₁, ¼)</td></tr>
+      <tr><td>φ ≤ τ ≤ θ</td><td>(b₂ + b₁τ − ¼τ², ½τ − b₁ − 1)</td><td>(K₂, L₂)</td></tr>
+      <tr><td>θ ≤ τ ≤ π/4</td><td>(c − τ, c − π/2 + τ)</td><td>(0, L₃)</td></tr>
+    </tbody>
+  </table></div>
+  <p>In the middle phase u is linear in τ. The question's functions follow as f = X/cos α and g = Y/sin α.</p>
+  <p><strong>Two numbers instead of ten.</strong> The eight constants other than φ and θ are fixed by requiring the path to be smooth at τ = φ and τ = θ. Those are eight linear equations, and they give the constants explicitly, in this order:</p>
+  $$c = \frac{\tfrac12 + \bigl(2 - \varphi - \tfrac{\pi}{4}(\theta - \varphi) + \tfrac14(\theta^2 - \varphi^2)\bigr)\sin\varphi - \bigl(\varphi + \tfrac32 - \tfrac{\pi}{2}\bigr)\cos\varphi}{\cos\varphi - \bigl(1 + \tfrac12(\theta - \varphi)\bigr)\sin\varphi}$$
+  $$a = \frac{c + \varphi + \tfrac32 - \tfrac{\pi}{2} - \tfrac12\cos\varphi}{2\sin\varphi}$$
+  $$b_1 = \tfrac12\bigl(\tfrac{\pi}{2} - 2 - c\bigr), \qquad b_2 = c - \theta + \tfrac12 - b_1\theta + \tfrac14\theta^2$$
+  $$h = \tfrac12\bigl(c + \theta - \tfrac{\pi}{2}\bigr), \qquad m = a\cos\varphi - \tfrac14\sin\varphi - \tfrac12$$
+  $$K_2 = -\tfrac12\cos\theta - h\sin\theta, \qquad K_1 = K_2 + m\cos\varphi + \tfrac14\sin\varphi$$
+  $$L_2 = \tfrac14 + \tfrac14\cos\varphi - m\sin\varphi, \qquad L_3 = L_2 + \tfrac12\sin\theta - h\cos\theta$$
+  <p><strong>The two numbers.</strong> φ and θ are fixed by one geometric condition: the point where the inner corner first touches the sofa (τ = φ) is the point where the other inner wall starts touching it (τ = π/2 − θ). As an equation between two points,</p>
+  $$A(2\varphi) = R_{\pi/2-\theta}\begin{pmatrix} c + \theta - \pi/2 \\ -1 \end{pmatrix} + \begin{pmatrix} 0 \\ L_3 \end{pmatrix}.$$
+  <p>With the constants above substituted, these are two equations in φ and θ. Solved numerically from a rough start near (0.04, 0.7), they give φ = 0.0391773647900836… and θ = 0.6813015093827249…; neither is known in closed form. From these two numbers the formulas reproduce all eight constants to 40 digits, and the turning-frame path matches f and g to 4 × 10⁻¹⁶ (<a href="https://github.com/nwzd/moving-sofa/blob/main/code/simple_form.py">code/simple_form.py</a>).</p>
+</section>
+
 <section id="vary">
   <h2>How f and g vary</h2>
   <figure>
@@ -158,7 +185,7 @@
 
 <section id="conclusion">
   <h2>Conclusion</h2>
-  <p>The question's idea works: letting r and t depend on α captures the optimal sofa exactly. The functions f and g are elementary closed forms in three pieces, fixed by ten constants.</p>
+  <p>The question's idea works: letting r and t depend on α captures the optimal sofa exactly. The functions f and g are elementary closed forms in three pieces. Their ten constants reduce to two, φ and θ, and in the hallway's turning frame the formulas become much shorter.</p>
   <ul>
     <li><strong>The optimum is close to an ellipse.</strong> Over the turn, r varies by 3.2% and t by 6.5%. The best constant (r, t) comes within 0.0017 of the optimal area, a gap of 0.075%.</li>
     <li><strong>Closing that gap needs the pieces.</strong> f and g switch formula exactly where the parts of the hallway touching the sofa change, at 4.49°, 78.07° and their mirror images. They are only once differentiable there, so no analytic family such as the ellipses can match them.</li>
