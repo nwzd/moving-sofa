@@ -10,7 +10,7 @@ A(\alpha) = \bigl(r\cos\alpha,\; t\sin\alpha\bigr), \qquad 0 \le \alpha \le \pi,
 
 after the hallway has turned through α/2. Constant r and t give ellipses; the best one has area 2.217857. The question asked whether r = f(α), t = g(α) could describe the optimal sofa.
 
-It can. This repository gives f and g in closed form for Gerver's sofa (area 2.21953166887…, proven optimal by [Baek, 2024](https://arxiv.org/abs/2411.19826)), checks them, and animates the motion. **This is not a new record:** it is the known optimum, written in the question's coordinates.
+It can. This repository gives f and g in closed form for Gerver's sofa (area 2.21953166887…, proven optimal by [Baek, 2024](https://arxiv.org/abs/2411.19826)), checks them, and animates the motion. The shape is Gerver's sofa itself, not a new one; what is new is its description in the question's coordinates.
 
 ## The result
 
@@ -45,7 +45,7 @@ Full-precision constants, the derivation from [Romik's exact solution (2018)](ht
 pip install -r code/requirements.txt
 cd code
 python gerver_path.py    # solve Romik's 22 equations for the constants (40 digits), print f and g
-python verify.py         # closed forms vs. solver; also the quick fixed-angle area estimate (runs high, see article)
+python verify.py         # closed forms vs. solver; also a quick fixed-angle area estimate, which runs high
 python area_precise.py   # sofa area from f and g, about 3 minutes
 ```
 
